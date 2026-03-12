@@ -28,8 +28,10 @@ export default function RegisterPage() {
       await register(formData);
       toast.success("Account created successfully!");
       router.push("/dashboard");
-    } catch {
-      toast.error("Registration failed. Please try again.");
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { detail?: string } } };
+      const message = axiosErr?.response?.data?.detail || "Registration failed. Please try again.";
+      toast.error(message);
     }
   };
 
@@ -42,7 +44,7 @@ export default function RegisterPage() {
       {/* Left Panel */}
       <div className="hidden w-1/2 flex-col justify-between bg-primary p-12 lg:flex">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-card/20">
             <Shield className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold text-white">ZKValue</span>
@@ -107,7 +109,7 @@ export default function RegisterPage() {
                 onChange={(e) => updateField("org_name", e.target.value)}
                 placeholder="Acme Capital Partners"
                 required
-                className="w-full rounded-lg border bg-white px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border bg-card px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -125,7 +127,7 @@ export default function RegisterPage() {
                 onChange={(e) => updateField("full_name", e.target.value)}
                 placeholder="Jane Smith"
                 required
-                className="w-full rounded-lg border bg-white px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border bg-card px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -143,7 +145,7 @@ export default function RegisterPage() {
                 onChange={(e) => updateField("email", e.target.value)}
                 placeholder="jane@acmecapital.com"
                 required
-                className="w-full rounded-lg border bg-white px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border bg-card px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -163,7 +165,7 @@ export default function RegisterPage() {
                   placeholder="Min. 8 characters"
                   required
                   minLength={8}
-                  className="w-full rounded-lg border bg-white px-4 py-2.5 pr-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-lg border bg-card px-4 py-2.5 pr-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
                 <button
                   type="button"

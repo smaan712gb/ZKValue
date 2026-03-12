@@ -36,7 +36,7 @@ function CollapsibleSQL({ sql }: { sql: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-xl border bg-white overflow-hidden">
+    <div className="rounded-xl border bg-card overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-secondary/30 transition-colors"
@@ -80,7 +80,7 @@ function ResultsTable({
 }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border bg-white p-8 text-center">
+      <div className="rounded-xl border bg-card p-8 text-center">
         <Table2 className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">No rows returned.</p>
       </div>
@@ -88,7 +88,7 @@ function ResultsTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-white">
+    <div className="overflow-hidden rounded-xl border bg-card">
       <div className="flex items-center gap-2 border-b px-5 py-4">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-100">
           <Table2 className="h-4 w-4 text-blue-600" />
@@ -231,7 +231,7 @@ export default function NLQueryPage() {
 
       <div className="space-y-6 p-6">
         {/* Query Input */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-card p-6">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
               <MessageSquare className="h-5 w-5 text-primary" />
@@ -250,7 +250,7 @@ export default function NLQueryPage() {
             onKeyDown={handleKeyDown}
             placeholder="e.g. What is the total NAV of loans with LTV above 80%?"
             rows={4}
-            className="w-full resize-none rounded-lg border bg-secondary/20 px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
+            className="w-full resize-none rounded-lg border bg-secondary/20 px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
           />
 
           <div className="mt-3 flex items-center justify-end gap-3">
@@ -283,7 +283,7 @@ export default function NLQueryPage() {
 
         {/* Suggested Questions */}
         {(suggestionsLoading || suggestions.length > 0) && !result && !loading && (
-          <div className="rounded-xl border bg-white p-5">
+          <div className="rounded-xl border bg-card p-5">
             <div className="mb-3 flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-amber-500" />
               <span className="text-sm font-semibold text-foreground">
@@ -314,7 +314,7 @@ export default function NLQueryPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-16">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-16">
             <Loader2 className="mb-4 h-10 w-10 animate-spin text-primary" />
             <p className="text-sm font-medium text-foreground">
               Processing your query...

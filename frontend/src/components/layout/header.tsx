@@ -5,6 +5,7 @@ import api from "@/lib/api";
 import { toast } from "sonner";
 import { Bell, Search } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 interface Notification {
   id: string;
@@ -66,7 +67,7 @@ export function Header({ title, description, actions }: HeaderProps) {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
+    <header className="flex h-16 items-center justify-between border-b bg-card px-6">
       <div>
         <h1 className="text-lg font-semibold text-foreground">{title}</h1>
         {description && (
@@ -84,7 +85,7 @@ export function Header({ title, description, actions }: HeaderProps) {
               autoFocus
               type="text"
               placeholder="Search verifications..."
-              className="w-64 rounded-lg border bg-white px-4 py-1.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-64 rounded-lg border bg-card px-4 py-1.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               onBlur={() => setSearchOpen(false)}
             />
           ) : (
@@ -112,7 +113,7 @@ export function Header({ title, description, actions }: HeaderProps) {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border bg-white shadow-lg">
+            <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border bg-card shadow-lg">
               <div className="flex items-center justify-between border-b px-4 py-3">
                 <span className="text-sm font-semibold text-foreground">Notifications</span>
                 {unreadCount > 0 && (
@@ -148,6 +149,9 @@ export function Header({ title, description, actions }: HeaderProps) {
             </div>
           )}
         </div>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* User avatar */}
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">

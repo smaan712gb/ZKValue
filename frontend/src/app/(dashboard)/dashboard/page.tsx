@@ -12,34 +12,102 @@ import {
   Brain,
   Shield,
   Loader2,
+  ArrowUp,
+  ArrowDown,
+  Minus,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import {
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  Tooltip,
+  PieChart as RechartsPie,
+  Pie,
+  Cell,
+} from "recharts";
 import type { DashboardStats, Verification } from "@/types";
+
+const MODULE_COLORS = ["#10b981", "#8b5cf6", "#3b82f6", "#f59e0b"];
 
 function StatCard({
   title,
   value,
   icon: Icon,
   color,
+  sparkData,
+  sparkColor,
+  trend,
 }: {
   title: string;
   value: string | number;
   icon: typeof FileCheck;
   color: string;
+  sparkData?: { v: number }[];
+  sparkColor?: string;
+  trend?: { value: number; label: string };
 }) {
   return (
-    <div className="rounded-xl border bg-white p-6 transition-shadow hover:shadow-sm">
+    <div className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-sm">
       <div className="flex items-start justify-between">
-        <div>
+        <div className="flex-1">
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
           <p className="mt-2 text-3xl font-bold text-foreground">{value}</p>
+          {trend && (
+            <div className="mt-1 flex items-center gap-1">
+              {trend.value > 0 ? (
+                <ArrowUp className="h-3 w-3 text-emerald-500" />
+              ) : trend.value < 0 ? (
+                <ArrowDown className="h-3 w-3 text-red-500" />
+              ) : (
+                <Minus className="h-3 w-3 text-gray-400" />
+              )}
+              <span
+                className={`text-xs font-medium ${
+                  trend.value > 0
+                    ? "text-emerald-600"
+                    : trend.value < 0
+                      ? "text-red-600"
+                      : "text-gray-500"
+                }`}
+              >
+                {trend.value > 0 ? "+" : ""}
+                {trend.value}% {trend.label}
+              </span>
+            </div>
+          )}
         </div>
-        <div
-          className={`flex h-10 w-10 items-center justify-center rounded-lg ${color}`}
-        >
-          <Icon className="h-5 w-5" />
+        <div className="flex flex-col items-end gap-2">
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-lg ${color}`}
+          >
+            <Icon className="h-5 w-5" />
+          </div>
+          {sparkData && sparkData.length > 1 && (
+            <div className="h-8 w-20">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={sparkData}>
+                  <defs>
+                    <linearGradient id={`spark-${title.replace(/\s/g, "")}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={sparkColor || "#6366f1"} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={sparkColor || "#6366f1"} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area
+                    type="monotone"
+                    dataKey="v"
+                    stroke={sparkColor || "#6366f1"}
+                    strokeWidth={1.5}
+                    fill={`url(#spark-${title.replace(/\s/g, "")})`}
+                    dot={false}
+                    isAnimationActive={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -48,10 +116,10 @@ function StatCard({
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    processing: "bg-blue-50 text-blue-700 border-blue-200",
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
-    failed: "bg-red-50 text-red-700 border-red-200",
+    completed: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800",
+    processing: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
+    pending: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
+    failed: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
   };
   const icons: Record<string, typeof CheckCircle2> = {
     completed: CheckCircle2,
@@ -169,38 +237,56 @@ export default function DashboardPage() {
       />
 
       <div className="p-6">
-        {/* Stats Grid */}
+        {/* Stats Grid with Sparklines */}
         <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total Verifications"
             value={stats.total_verifications}
             icon={FileCheck}
             color="bg-primary/10 text-primary"
+            sparkData={stats.verification_trend?.map((t) => ({ v: t.count })) || []}
+            sparkColor="#6366f1"
+            trend={
+              stats.verification_trend?.length >= 2
+                ? {
+                    value: Math.round(
+                      ((stats.verification_trend[stats.verification_trend.length - 1].count -
+                        stats.verification_trend[stats.verification_trend.length - 2].count) /
+                        Math.max(stats.verification_trend[stats.verification_trend.length - 2].count, 1)) *
+                        100
+                    ),
+                    label: "vs last period",
+                  }
+                : undefined
+            }
           />
           <StatCard
             title="Total Asset Value"
             value={formatCurrency(stats.total_asset_value)}
             icon={TrendingUp}
             color="bg-chart-2/10 text-chart-2"
+            sparkColor="#10b981"
           />
           <StatCard
             title="Credit Portfolios"
             value={stats.credit_portfolios}
             icon={Landmark}
             color="bg-chart-3/10 text-chart-3"
+            sparkColor="#3b82f6"
           />
           <StatCard
             title="AI Assets Valued"
             value={stats.ai_assets}
             icon={Brain}
             color="bg-chart-4/10 text-chart-4"
+            sparkColor="#8b5cf6"
           />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Verifications */}
           <div className="lg:col-span-2">
-            <div className="rounded-xl border bg-white">
+            <div className="rounded-xl border bg-card">
               <div className="flex items-center justify-between border-b px-6 py-4">
                 <h2 className="font-semibold text-foreground">
                   Recent Verifications
@@ -256,7 +342,7 @@ export default function DashboardPage() {
           {/* Usage & Quick Actions */}
           <div className="space-y-6">
             {/* Usage */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <h2 className="mb-4 font-semibold text-foreground">
                 Monthly Usage
               </h2>
@@ -285,45 +371,73 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            {/* Verification by Module */}
-            <div className="rounded-xl border bg-white p-6">
+            {/* Value by Module — Donut Chart */}
+            <div className="rounded-xl border bg-card p-6">
               <h2 className="mb-4 font-semibold text-foreground">
                 Value by Module
               </h2>
-              <div className="space-y-4">
-                {stats.value_by_module.map((item) => (
-                  <div key={item.module}>
-                    <div className="mb-1 flex items-center justify-between text-sm">
-                      <span className="font-medium text-foreground">
-                        {item.module}
-                      </span>
-                      <span className="text-muted-foreground">
-                        {formatCurrency(item.value)}
-                      </span>
-                    </div>
-                    <div className="h-2 overflow-hidden rounded-full bg-secondary">
-                      <div
-                        className={`h-full rounded-full ${
-                          item.module.includes("Credit")
-                            ? "bg-chart-2"
-                            : "bg-chart-4"
-                        }`}
-                        style={{
-                          width: `${
-                            stats.total_asset_value > 0
-                              ? (item.value / stats.total_asset_value) * 100
-                              : 0
-                          }%`,
-                        }}
+              {stats.value_by_module.length > 0 ? (
+                <div className="flex flex-col items-center">
+                  <ResponsiveContainer width={180} height={180}>
+                    <RechartsPie>
+                      <Pie
+                        data={stats.value_by_module.map((m) => ({
+                          name: m.module,
+                          value: m.value,
+                        }))}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={75}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {stats.value_by_module.map((_, idx) => (
+                          <Cell
+                            key={idx}
+                            fill={MODULE_COLORS[idx % MODULE_COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(value) => formatCurrency(Number(value))}
                       />
-                    </div>
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                  <div className="mt-3 w-full space-y-2">
+                    {stats.value_by_module.map((item, idx) => (
+                      <div
+                        key={item.module}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="inline-block h-3 w-3 rounded-sm"
+                            style={{
+                              backgroundColor:
+                                MODULE_COLORS[idx % MODULE_COLORS.length],
+                            }}
+                          />
+                          <span className="font-medium text-foreground">
+                            {item.module}
+                          </span>
+                        </div>
+                        <span className="text-muted-foreground">
+                          {formatCurrency(item.value)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <p className="py-8 text-center text-sm text-muted-foreground">
+                  No module data yet
+                </p>
+              )}
             </div>
 
             {/* Quick Actions */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <h2 className="mb-4 font-semibold text-foreground">
                 Quick Actions
               </h2>

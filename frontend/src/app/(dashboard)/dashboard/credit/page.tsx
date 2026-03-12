@@ -131,7 +131,7 @@ export default function CreditPage() {
                 { label: "Total Loans", value: totalLoans.toLocaleString(), icon: FileSpreadsheet, color: "text-chart-3 bg-chart-3/10" },
                 { label: "Avg Rate", value: `${(avgRate * 100).toFixed(2)}%`, icon: TrendingUp, color: "text-chart-4 bg-chart-4/10" },
               ].map((s) => (
-                <div key={s.label} className="rounded-xl border bg-white p-5">
+                <div key={s.label} className="rounded-xl border bg-card p-5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-muted-foreground">{s.label}</p>
@@ -167,7 +167,7 @@ export default function CreditPage() {
                 {portfolios.map((p) => {
                   const allCompliant = Object.values(p.covenant_compliance_status).every(Boolean);
                   return (
-                    <div key={p.id} className="rounded-xl border bg-white p-6 transition-shadow hover:shadow-md">
+                    <div key={p.id} className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md">
                       <div className="mb-4 flex items-start justify-between">
                         <div>
                           <h3 className="font-semibold text-foreground">{p.portfolio_name}</h3>
@@ -199,12 +199,12 @@ export default function CreditPage() {
 
                       <div className="mb-4 flex items-center gap-2">
                         {allCompliant ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 dark:bg-emerald-950 dark:border-emerald-800 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                             <CheckCircle2 className="h-3 w-3" />
                             All Covenants Met
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
                             <AlertCircle className="h-3 w-3" />
                             Covenant Breach
                           </span>
@@ -236,7 +236,7 @@ export default function CreditPage() {
         {/* Upload Modal */}
         {showUpload && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="w-full max-w-lg rounded-xl bg-white p-6">
+            <div className="w-full max-w-lg rounded-xl bg-card p-6">
               <h2 className="mb-4 text-lg font-semibold">Upload Loan Tape</h2>
               <div
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}

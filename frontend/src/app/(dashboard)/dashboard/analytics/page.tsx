@@ -20,6 +20,21 @@ import {
   Zap,
   PieChart,
 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  PieChart as RechartsPie,
+  Pie,
+  Cell,
+  AreaChart,
+  Area,
+} from "recharts";
 
 interface VerificationTrend {
   date: string;
@@ -101,10 +116,14 @@ function formatMonth(dateStr: string) {
 // --- Section Components ---
 
 function VerificationTrendsChart({ trends }: { trends: VerificationTrend[] }) {
-  const maxTotal = Math.max(...trends.map((t) => t.total), 1);
+  const chartData = trends.map((t) => ({
+    ...t,
+    month: formatMonth(t.date),
+    successRate: t.success_rate * 100,
+  }));
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-6 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
           <BarChart3 className="h-5 w-5 text-primary" />
@@ -122,77 +141,33 @@ function VerificationTrendsChart({ trends }: { trends: VerificationTrend[] }) {
           No trend data available yet.
         </p>
       ) : (
-        <>
-          {/* Legend */}
-          <div className="mb-4 flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-              Completed
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-sm bg-red-500" />
-              Failed
-            </span>
-          </div>
-
-          {/* Bar Chart */}
-          <div className="flex items-end gap-2" style={{ height: 200 }}>
-            {trends.map((t) => {
-              const completedHeight = (t.completed / maxTotal) * 100;
-              const failedHeight = (t.failed / maxTotal) * 100;
-
-              return (
-                <div
-                  key={t.date}
-                  className="group relative flex flex-1 flex-col items-center"
-                >
-                  {/* Tooltip */}
-                  <div className="pointer-events-none absolute -top-16 z-10 hidden rounded-lg border bg-white px-3 py-2 text-xs shadow-lg group-hover:block">
-                    <p className="font-medium text-foreground">
-                      {formatMonth(t.date)}
-                    </p>
-                    <p className="text-muted-foreground">
-                      Total: {t.total} | Rate: {formatPercent(t.success_rate)}
-                    </p>
-                  </div>
-
-                  {/* Bars */}
-                  <div
-                    className="flex w-full flex-col justify-end"
-                    style={{ height: 160 }}
-                  >
-                    <div
-                      className="w-full rounded-t bg-red-500 transition-all"
-                      style={{ height: `${failedHeight}%` }}
-                    />
-                    <div
-                      className="w-full bg-emerald-500 transition-all"
-                      style={{
-                        height: `${completedHeight}%`,
-                        borderRadius:
-                          failedHeight > 0
-                            ? "0"
-                            : "0.25rem 0.25rem 0 0",
-                      }}
-                    />
-                  </div>
-
-                  {/* Label */}
-                  <span className="mt-2 text-[10px] font-medium text-muted-foreground">
-                    {formatMonth(t.date)}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground">
-                    {formatPercent(t.success_rate)}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={chartData} barGap={2}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+            <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 12, fill: "#888" }} axisLine={false} tickLine={false} allowDecimals={false} />
+            <Tooltip
+              contentStyle={{ borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}
+              formatter={(value, name) => [String(value), name === "completed" ? "Completed" : "Failed"]}
+              labelFormatter={(label) => `Month: ${label}`}
+            />
+            <Legend
+              verticalAlign="top"
+              align="right"
+              iconType="circle"
+              iconSize={8}
+              formatter={(value) => <span className="text-xs text-gray-600">{value === "completed" ? "Completed" : "Failed"}</span>}
+            />
+            <Bar dataKey="completed" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} name="completed" />
+            <Bar dataKey="failed" stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} name="failed" />
+          </BarChart>
+        </ResponsiveContainer>
       )}
     </div>
   );
 }
+
+const ASSET_PIE_COLORS = ["#6366f1", "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 function PortfolioPerformanceCard({
   data,
@@ -233,7 +208,7 @@ function PortfolioPerformanceCard({
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-5 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-2/10">
           <DollarSign className="h-5 w-5 text-chart-2" />
@@ -284,7 +259,7 @@ function AIAssetPerformanceCard({
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-5 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-4/10">
           <Brain className="h-5 w-5 text-chart-4" />
@@ -354,7 +329,7 @@ function AssetTypeBreakdownCard({
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-5 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-chart-3/10">
           <PieChart className="h-5 w-5 text-chart-3" />
@@ -374,41 +349,69 @@ function AssetTypeBreakdownCard({
           No asset data available.
         </p>
       ) : (
-        <div className="space-y-4">
-          {data.map((item, idx) => {
-            const pct = (item.count / totalCount) * 100;
-            const valuePct = (item.total_value / maxValue) * 100;
-            const barColor = colors[idx % colors.length];
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+          {/* Pie Chart */}
+          <div className="flex-shrink-0">
+            <ResponsiveContainer width={180} height={180}>
+              <RechartsPie>
+                <Pie
+                  data={data.map((d) => ({ name: d.asset_type.replace(/_/g, " "), value: d.total_value }))}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={45}
+                  outerRadius={75}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {data.map((_, idx) => (
+                    <Cell key={idx} fill={ASSET_PIE_COLORS[idx % ASSET_PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+              </RechartsPie>
+            </ResponsiveContainer>
+          </div>
 
-            return (
-              <div key={item.asset_type}>
-                <div className="mb-1.5 flex items-center justify-between">
-                  <div>
-                    <span className="text-sm font-medium text-foreground">
-                      {item.asset_type}
-                    </span>
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      {item.count} asset{item.count !== 1 ? "s" : ""} ({pct.toFixed(0)}%)
-                    </span>
+          {/* Details */}
+          <div className="flex-1 space-y-3">
+            {data.map((item, idx) => {
+              const pct = (item.count / totalCount) * 100;
+              const valuePct = (item.total_value / maxValue) * 100;
+
+              return (
+                <div key={item.asset_type}>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="inline-block h-3 w-3 rounded-sm"
+                        style={{ backgroundColor: ASSET_PIE_COLORS[idx % ASSET_PIE_COLORS.length] }}
+                      />
+                      <span className="text-sm font-medium text-foreground">
+                        {item.asset_type.replace(/_/g, " ")}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {item.count} ({pct.toFixed(0)}%)
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-sm font-semibold text-foreground">
+                        {formatCurrency(item.total_value)}
+                      </span>
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        {formatPercent(item.avg_confidence)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-sm font-semibold text-foreground">
-                      {formatCurrency(item.total_value)}
-                    </span>
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      Conf: {formatPercent(item.avg_confidence)}
-                    </span>
+                  <div className="h-2 overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${valuePct}%`, backgroundColor: ASSET_PIE_COLORS[idx % ASSET_PIE_COLORS.length] }}
+                    />
                   </div>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className={`h-full rounded-full ${barColor} transition-all`}
-                    style={{ width: `${valuePct}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
@@ -421,27 +424,27 @@ function AlertSummaryCard({ data }: { data: AlertSummary }) {
       label: "Critical",
       count: data.by_severity.critical,
       icon: AlertCircle,
-      badgeClass: "bg-red-50 text-red-700 border-red-200",
+      badgeClass: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
       dotClass: "bg-red-500",
     },
     {
       label: "Warning",
       count: data.by_severity.warning,
       icon: AlertTriangle,
-      badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+      badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
       dotClass: "bg-amber-500",
     },
     {
       label: "Info",
       count: data.by_severity.info,
       icon: Info,
-      badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+      badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
       dotClass: "bg-blue-500",
     },
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-5 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50">
           <Bell className="h-5 w-5 text-red-500" />
@@ -496,7 +499,7 @@ function ProcessingPerformanceCard({ data }: { data: ProcessingStats }) {
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-xl border bg-card p-6">
       <div className="mb-5 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50">
           <Zap className="h-5 w-5 text-amber-500" />

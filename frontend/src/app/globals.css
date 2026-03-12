@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ── Light theme (default) ── */
 @theme inline {
   --color-background: #ffffff;
   --color-foreground: hsl(222.2 84% 4.9%);
@@ -40,6 +41,50 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+/* ── Dark theme ──
+   Design principles:
+   - Background: deep navy (not pure black) for eye comfort
+   - Cards: slightly lighter than bg for visual hierarchy
+   - Text: high contrast (91%+ lightness for body, 64% for muted)
+   - Borders: visible but subtle (22% lightness)
+   - Primary: brighter blue for dark bg contrast
+   - Chart colors: 5-10% brighter than light theme for dark bg legibility
+*/
+.dark {
+  --color-background: hsl(222 47% 6%);
+  --color-foreground: hsl(210 40% 93%);
+  --color-card: hsl(222 47% 9%);
+  --color-card-foreground: hsl(210 40% 93%);
+  --color-popover: hsl(222 47% 9%);
+  --color-popover-foreground: hsl(210 40% 93%);
+  --color-primary: hsl(217 91% 60%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(222 47% 13%);
+  --color-secondary-foreground: hsl(210 40% 90%);
+  --color-muted: hsl(222 47% 13%);
+  --color-muted-foreground: hsl(215 16% 64%);
+  --color-accent: hsl(216 34% 17%);
+  --color-accent-foreground: hsl(210 40% 93%);
+  --color-destructive: hsl(0 63% 45%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+  --color-border: hsl(216 28% 22%);
+  --color-input: hsl(216 28% 22%);
+  --color-ring: hsl(217 91% 55%);
+  --color-sidebar-background: hsl(222 47% 6%);
+  --color-sidebar-foreground: hsl(210 40% 90%);
+  --color-sidebar-primary: hsl(217 91% 60%);
+  --color-sidebar-primary-foreground: hsl(0 0% 100%);
+  --color-sidebar-accent: hsl(216 34% 17%);
+  --color-sidebar-accent-foreground: hsl(210 40% 93%);
+  --color-sidebar-border: hsl(216 28% 22%);
+  --color-sidebar-ring: hsl(217 91% 60%);
+  --color-chart-1: hsl(217 91% 65%);
+  --color-chart-2: hsl(160 60% 50%);
+  --color-chart-3: hsl(30 80% 60%);
+  --color-chart-4: hsl(280 65% 68%);
+  --color-chart-5: hsl(340 75% 62%);
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -61,6 +106,9 @@
   background: hsl(215.4 16.3% 76.9%);
   border-radius: 3px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(215.4 16.3% 30%);
+}
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(215.4 16.3% 56.9%);
 }
@@ -81,4 +129,40 @@
 
 .animate-slide-in {
   animation: slide-in-right 0.3s ease-out forwards;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes grid-fade {
+  0% { opacity: 0; }
+  50% { opacity: 0.03; }
+  100% { opacity: 0; }
+}
+
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.03;
+}
+
+.dark .bg-grid-pattern {
+  opacity: 0.05;
 }

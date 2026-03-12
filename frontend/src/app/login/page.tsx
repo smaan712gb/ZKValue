@@ -20,8 +20,10 @@ export default function LoginPage() {
       await login(email, password);
       toast.success("Welcome back!");
       router.push("/dashboard");
-    } catch {
-      toast.error("Invalid email or password");
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { detail?: string } } };
+      const message = axiosErr?.response?.data?.detail || "Invalid email or password";
+      toast.error(message);
     }
   };
 
@@ -30,7 +32,7 @@ export default function LoginPage() {
       {/* Left Panel */}
       <div className="hidden w-1/2 flex-col justify-between bg-primary p-12 lg:flex">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-card/20">
             <Shield className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold text-white">ZKValue</span>
@@ -83,7 +85,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
                 required
-                className="w-full rounded-lg border bg-white px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border bg-card px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -110,7 +112,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full rounded-lg border bg-white px-4 py-2.5 pr-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-lg border bg-card px-4 py-2.5 pr-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
                 <button
                   type="button"

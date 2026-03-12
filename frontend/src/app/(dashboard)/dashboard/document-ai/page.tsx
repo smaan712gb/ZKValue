@@ -146,7 +146,7 @@ export default function DocumentAIPage() {
 
       <div className="space-y-6 p-6">
         {/* Upload Zone */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-card p-6">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
               <Cpu className="h-5 w-5 text-primary" />
@@ -230,7 +230,7 @@ export default function DocumentAIPage() {
             <button
               disabled={!selectedFile || loading}
               onClick={() => runAction("/document-ai/parse", "Parse")}
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-white px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -261,7 +261,7 @@ export default function DocumentAIPage() {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-16">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-16">
             <Loader2 className="mb-4 h-10 w-10 animate-spin text-primary" />
             <p className="text-sm font-medium text-foreground">
               Processing document...
@@ -289,7 +289,7 @@ export default function DocumentAIPage() {
         {!loading && result && (
           <div className="space-y-4">
             {/* Summary Card */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <div className="mb-4 flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50">
                   <CheckCircle2 className="h-5 w-5 text-emerald-500" />
@@ -303,7 +303,7 @@ export default function DocumentAIPage() {
                   </p>
                 </div>
                 {result.verification_id && (
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                     <CheckCircle2 className="h-3 w-3" />
                     Verification Started
                   </span>
@@ -339,7 +339,7 @@ export default function DocumentAIPage() {
                   {result.warnings.map((w, i) => (
                     <div
                       key={i}
-                      className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+                      className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 px-4 py-3"
                     >
                       <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500" />
                       <p className="text-xs text-amber-700">{w}</p>
@@ -351,7 +351,7 @@ export default function DocumentAIPage() {
 
             {/* Preview Table */}
             {previewLoans.length > 0 && (
-              <div className="overflow-hidden rounded-xl border bg-white">
+              <div className="overflow-hidden rounded-xl border bg-card">
                 <div className="border-b px-6 py-4">
                   <h3 className="font-semibold text-foreground">
                     Loan Preview
@@ -407,11 +407,11 @@ export default function DocumentAIPage() {
                               <span
                                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                                   loan.status === "current"
-                                    ? "bg-emerald-50 text-emerald-700"
+                                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400"
                                     : loan.status === "delinquent"
-                                    ? "bg-amber-50 text-amber-700"
+                                    ? "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400"
                                     : loan.status === "default"
-                                    ? "bg-red-50 text-red-700"
+                                    ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400"
                                     : "bg-secondary text-muted-foreground"
                                 }`}
                               >

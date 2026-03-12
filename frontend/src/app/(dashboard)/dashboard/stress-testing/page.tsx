@@ -67,16 +67,16 @@ function formatPercent(v: number) {
 }
 
 function severityClass(lossRate: number) {
-  if (lossRate < 0.05) return "border-emerald-200 bg-emerald-50";
-  if (lossRate < 0.15) return "border-amber-200 bg-amber-50";
-  return "border-red-200 bg-red-50";
+  if (lossRate < 0.05) return "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950";
+  if (lossRate < 0.15) return "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950";
+  return "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950";
 }
 
 function severityBadge(lossRate: number) {
   if (lossRate < 0.05)
-    return "bg-emerald-100 text-emerald-700 border-emerald-200";
-  if (lossRate < 0.15) return "bg-amber-100 text-amber-700 border-amber-200";
-  return "bg-red-100 text-red-700 border-red-200";
+    return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800";
+  if (lossRate < 0.15) return "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800";
+  return "bg-red-100 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800";
 }
 
 function severityLabel(lossRate: number) {
@@ -255,7 +255,7 @@ function CustomTab({ verificationId }: { verificationId: string }) {
       {/* Controls */}
       <div className="grid gap-6 sm:grid-cols-3">
         {/* Rate Shock */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border bg-card p-5">
           <label className="mb-1 block text-sm font-medium text-foreground">
             Rate Shock (bps)
           </label>
@@ -286,7 +286,7 @@ function CustomTab({ verificationId }: { verificationId: string }) {
         </div>
 
         {/* Default Multiplier */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border bg-card p-5">
           <label className="mb-1 block text-sm font-medium text-foreground">
             Default Multiplier
           </label>
@@ -316,7 +316,7 @@ function CustomTab({ verificationId }: { verificationId: string }) {
         </div>
 
         {/* Collateral Haircut */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border bg-card p-5">
           <label className="mb-1 block text-sm font-medium text-foreground">
             Collateral Haircut (%)
           </label>
@@ -391,7 +391,7 @@ function CustomTab({ verificationId }: { verificationId: string }) {
                 value: formatPercent(result.avg_default_probability),
               },
             ].map((m) => (
-              <div key={m.label} className="rounded-lg bg-white/70 p-4">
+              <div key={m.label} className="rounded-lg bg-card/70 p-4">
                 <p className="text-xs text-muted-foreground">{m.label}</p>
                 <p className="mt-1 text-xl font-bold text-foreground">
                   {m.value}
@@ -466,7 +466,7 @@ function MonteCarloTab({ verificationId }: { verificationId: string }) {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="rounded-xl border bg-white p-5">
+      <div className="rounded-xl border bg-card p-5">
         <label className="mb-1 block text-sm font-medium text-foreground">
           Number of Simulations
         </label>
@@ -543,7 +543,7 @@ function MonteCarloTab({ verificationId }: { verificationId: string }) {
                 desc: "Mean loss across simulations",
               },
             ].map((m) => (
-              <div key={m.label} className="rounded-xl border bg-white p-5">
+              <div key={m.label} className="rounded-xl border bg-card p-5">
                 <p className="text-xs text-muted-foreground">{m.desc}</p>
                 <p className="mt-1 text-2xl font-bold text-foreground">
                   {m.value}
@@ -556,7 +556,7 @@ function MonteCarloTab({ verificationId }: { verificationId: string }) {
           </div>
 
           {/* NAV Distribution */}
-          <div className="rounded-xl border bg-white p-6">
+          <div className="rounded-xl border bg-card p-6">
             <h3 className="mb-4 font-semibold text-foreground">
               NAV Distribution
             </h3>
@@ -606,7 +606,7 @@ function MonteCarloTab({ verificationId }: { verificationId: string }) {
           </div>
 
           {/* Generate Narrative */}
-          <div className="rounded-xl border bg-white p-6">
+          <div className="rounded-xl border bg-card p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-foreground">AI Narrative</h3>
@@ -705,7 +705,7 @@ export default function StressTestingPage() {
 
       <div className="space-y-6 p-6">
         {/* Verification Selector */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border bg-card p-5">
           <label className="mb-2 block text-sm font-medium text-foreground">
             Select Verification
           </label>
@@ -742,7 +742,7 @@ export default function StressTestingPage() {
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                className="w-full appearance-none rounded-lg border bg-white py-2 pl-4 pr-10 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full appearance-none rounded-lg border bg-card py-2 pl-4 pr-10 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
                 {verifications.map((v) => (
                   <option key={v.id} value={v.id}>
@@ -766,7 +766,7 @@ export default function StressTestingPage() {
 
         {/* Tabs + Content */}
         {selectedId && (
-          <div className="rounded-xl border bg-white">
+          <div className="rounded-xl border bg-card">
             {/* Tab Bar */}
             <div className="flex border-b">
               {TABS.map((tab) => {

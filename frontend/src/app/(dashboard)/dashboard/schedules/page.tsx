@@ -66,7 +66,7 @@ interface AlertsResponse {
 function ModuleBadge({ module }: { module: string }) {
   if (module === "private_credit") {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
         <Landmark className="h-3 w-3" />
         Credit
       </span>
@@ -82,9 +82,9 @@ function ModuleBadge({ module }: { module: string }) {
 
 function SeverityBadge({ severity }: { severity: string }) {
   const styles: Record<string, string> = {
-    critical: "bg-red-50 text-red-700 border-red-200",
-    warning: "bg-amber-50 text-amber-700 border-amber-200",
-    info: "bg-blue-50 text-blue-700 border-blue-200",
+    critical: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
+    warning: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
+    info: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
   };
   const icons: Record<string, typeof AlertCircle> = {
     critical: AlertCircle,
@@ -104,9 +104,9 @@ function SeverityBadge({ severity }: { severity: string }) {
 
 function AlertStatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    new: "bg-blue-50 text-blue-700 border-blue-200",
-    acknowledged: "bg-amber-50 text-amber-700 border-amber-200",
-    resolved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    new: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
+    acknowledged: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
+    resolved: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800",
   };
   return (
     <span
@@ -140,7 +140,7 @@ export default function SchedulesPage() {
             onClick={() => setActiveTab("schedules")}
             className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === "schedules"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -151,7 +151,7 @@ export default function SchedulesPage() {
             onClick={() => setActiveTab("alerts")}
             className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === "alerts"
-                ? "bg-white text-foreground shadow-sm"
+                ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -272,7 +272,7 @@ function SchedulesTab() {
 
       {/* Loading */}
       {loading && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="mt-3 text-sm text-muted-foreground">
             Loading schedules...
@@ -282,7 +282,7 @@ function SchedulesTab() {
 
       {/* Error */}
       {!loading && error && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <AlertCircle className="h-8 w-8 text-red-500" />
           <p className="mt-3 text-sm font-medium text-foreground">
             Failed to load schedules
@@ -299,7 +299,7 @@ function SchedulesTab() {
 
       {/* Empty */}
       {!loading && !error && schedules.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <CalendarClock className="h-8 w-8 text-muted-foreground" />
           <p className="mt-3 text-sm font-medium text-foreground">
             No schedules yet
@@ -323,7 +323,7 @@ function SchedulesTab() {
           {schedules.map((s) => (
             <div
               key={s.id}
-              className="flex flex-col justify-between rounded-xl border bg-white p-5 transition-shadow hover:shadow-md"
+              className="flex flex-col justify-between rounded-xl border bg-card p-5 transition-shadow hover:shadow-md"
             >
               {/* Header */}
               <div>
@@ -347,7 +347,7 @@ function SchedulesTab() {
                     disabled={actionLoading === s.id}
                     className={`ml-2 flex-shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
                       s.is_active
-                        ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 hover:bg-emerald-100"
                         : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                     }`}
                   >
@@ -487,7 +487,7 @@ function NewScheduleModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
+      <div className="w-full max-w-lg rounded-xl bg-card shadow-xl">
         {/* Modal header */}
         <div className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="text-base font-semibold text-foreground">
@@ -513,7 +513,7 @@ function NewScheduleModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Monthly Credit Portfolio Review"
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
@@ -525,7 +525,7 @@ function NewScheduleModal({
             <select
               value={module}
               onChange={(e) => setModule(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="private_credit">Private Credit</option>
               <option value="ai_ip_valuation">AI-IP Valuation</option>
@@ -540,7 +540,7 @@ function NewScheduleModal({
             <select
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
@@ -561,7 +561,7 @@ function NewScheduleModal({
               step="0.1"
               value={driftThreshold}
               onChange={(e) => setDriftThreshold(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
@@ -575,7 +575,7 @@ function NewScheduleModal({
               value={inputData}
               onChange={(e) => setInputData(e.target.value)}
               placeholder='{"portfolio_id": "...", "parameters": {}}'
-              className="w-full rounded-lg border bg-white px-3 py-2 font-mono text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border bg-card px-3 py-2 font-mono text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
@@ -696,7 +696,7 @@ function AlertsTab() {
               setSeverityFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+            className="rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
           >
             <option value="all">All Severities</option>
             <option value="critical">Critical</option>
@@ -709,7 +709,7 @@ function AlertsTab() {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+            className="rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
           >
             <option value="all">All Statuses</option>
             <option value="new">New</option>
@@ -721,7 +721,7 @@ function AlertsTab() {
 
       {/* Loading */}
       {loading && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="mt-3 text-sm text-muted-foreground">
             Loading alerts...
@@ -731,7 +731,7 @@ function AlertsTab() {
 
       {/* Error */}
       {!loading && error && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <AlertCircle className="h-8 w-8 text-red-500" />
           <p className="mt-3 text-sm font-medium text-foreground">
             Failed to load alerts
@@ -748,7 +748,7 @@ function AlertsTab() {
 
       {/* Empty */}
       {!loading && !error && alerts.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+        <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
           <ShieldCheck className="h-8 w-8 text-muted-foreground" />
           <p className="mt-3 text-sm font-medium text-foreground">
             No drift alerts
@@ -763,7 +763,7 @@ function AlertsTab() {
 
       {/* Table */}
       {!loading && !error && alerts.length > 0 && (
-        <div className="overflow-hidden rounded-xl border bg-white">
+        <div className="overflow-hidden rounded-xl border bg-card">
           <table className="w-full">
             <thead>
               <tr className="border-b bg-secondary/50">

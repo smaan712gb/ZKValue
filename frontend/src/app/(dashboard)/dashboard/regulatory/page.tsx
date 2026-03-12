@@ -170,7 +170,7 @@ function ReportCard({
   }, [reportType]);
 
   return (
-    <div className="rounded-xl border bg-white flex flex-col">
+    <div className="rounded-xl border bg-card flex flex-col">
       {/* Card header */}
       <div className="p-6 border-b">
         <div className="flex items-start gap-4">

@@ -158,7 +158,7 @@ export default function AIIPPage() {
             { label: "Avg Confidence", value: assets.length > 0 ? `${(avgConfidence * 100).toFixed(0)}%` : "N/A", icon: Shield, color: "text-chart-2 bg-chart-2/10" },
             { label: "IAS 38 Compliant", value: `${assets.filter(a => a.ias38_compliant).length}/${assets.length}`, icon: CheckCircle2, color: "text-chart-3 bg-chart-3/10" },
           ].map((s) => (
-            <div key={s.label} className="rounded-xl border bg-white p-5">
+            <div key={s.label} className="rounded-xl border bg-card p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{s.label}</p>
@@ -173,7 +173,7 @@ export default function AIIPPage() {
         </div>
 
         {/* Value Breakdown */}
-        <div className="mb-8 rounded-xl border bg-white p-6">
+        <div className="mb-8 rounded-xl border bg-card p-6">
           <h2 className="mb-4 font-semibold text-foreground">Value Breakdown by Asset Type</h2>
           <div className="flex gap-4">
             {(Object.entries(assetTypeConfig) as [AssetType, typeof assetTypeConfig.training_data][]).map(([type, config]) => {
@@ -202,7 +202,7 @@ export default function AIIPPage() {
         {/* New Valuation Modal */}
         {showNewAsset && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="w-full max-w-2xl rounded-xl bg-white p-6">
+            <div className="w-full max-w-2xl rounded-xl bg-card p-6">
               <h2 className="mb-6 text-lg font-semibold">New AI-IP Valuation</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -321,7 +321,7 @@ export default function AIIPPage() {
 
         {/* Assets Grid */}
         {assets.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white p-16">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-16">
             <Brain className="mb-4 h-12 w-12 text-muted-foreground/50" />
             <h3 className="mb-1 text-lg font-semibold text-foreground">No AI assets yet</h3>
             <p className="mb-6 text-sm text-muted-foreground">
@@ -340,7 +340,7 @@ export default function AIIPPage() {
             {assets.map((asset) => {
               const config = assetTypeConfig[asset.asset_type];
               return (
-                <div key={asset.id} className="rounded-xl border bg-white p-6 transition-shadow hover:shadow-md">
+                <div key={asset.id} className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md">
                   <div className="mb-4 flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${config.color}`}>
@@ -364,12 +364,12 @@ export default function AIIPPage() {
                       {asset.valuation_method.replace(/_/g, " ")}
                     </span>
                     {asset.ias38_compliant && (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                         <CheckCircle2 className="h-3 w-3" /> IAS 38
                       </span>
                     )}
                     {asset.asc350_compliant && (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                         <CheckCircle2 className="h-3 w-3" /> ASC 350
                       </span>
                     )}

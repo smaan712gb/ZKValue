@@ -139,7 +139,7 @@ export default function AuditPage() {
               placeholder="Search audit logs..."
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border bg-card py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export default function AuditPage() {
             <select
               value={actionFilter}
               onChange={(e) => { setActionFilter(e.target.value); setCurrentPage(1); }}
-              className="rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+              className="rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="all">All Actions</option>
               <option value="verification_created">Verification Created</option>
@@ -162,7 +162,7 @@ export default function AuditPage() {
         </div>
 
         {/* Log Table */}
-        <div className="overflow-hidden rounded-xl border bg-white">
+        <div className="overflow-hidden rounded-xl border bg-card">
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />

@@ -6,6 +6,23 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   compress: true,
 
+  async rewrites() {
+    // When BACKEND_INTERNAL_URL is set (Railway/production), proxy /api/* to backend
+    // This avoids CORS issues and keeps the frontend as the single entry point
+    const backendUrl = process.env.BACKEND_INTERNAL_URL;
+    if (!backendUrl) return [];
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
+      },
+      {
+        source: "/health",
+        destination: `${backendUrl}/health`,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

@@ -45,6 +45,9 @@ async def valuate_asset(
     )
     await db.commit()
 
+    from app.workers.verification_tasks import process_verification_task
+    process_verification_task.delay(str(verification.id))
+
     return {
         "verification_id": str(verification.id),
         "status": "pending",

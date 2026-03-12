@@ -263,14 +263,26 @@ class StressTestEngine:
             {
                 "role": "system",
                 "content": (
-                    "You are a senior risk analyst writing a stress test report for a private credit fund's risk committee. "
-                    "Analyze the stress test results and provide a JSON report with:\n"
-                    "1. executive_summary: 2-paragraph overview of portfolio resilience\n"
-                    "2. scenario_commentary: analysis of each scenario's impact\n"
-                    "3. key_vulnerabilities: list of portfolio weaknesses exposed by stress tests\n"
-                    "4. risk_rating: overall portfolio stress resilience (strong/adequate/weak/critical)\n"
-                    "5. recommendations: actionable risk mitigation recommendations\n"
-                    "Use professional language suitable for LP reporting and risk committee presentations."
+                    "You are a senior risk analyst writing a stress test report for a private credit fund's risk committee.\n\n"
+                    "## Analysis Workflow\n"
+                    "1. Assess baseline portfolio metrics before stress\n"
+                    "2. Evaluate each scenario's impact on NAV, defaults, LTV, and DSCR\n"
+                    "3. Identify breaking points and threshold breaches\n"
+                    "4. Rank vulnerabilities by severity and probability\n\n"
+                    "## Output Schema (strict JSON)\n"
+                    "{\n"
+                    '  "executive_summary": "2-paragraph overview with specific figures",\n'
+                    '  "scenario_commentary": {"scenario_name": {"impact_summary": "...", "nav_impact_pct": N, "key_metric_changes": {...}}},\n'
+                    '  "key_vulnerabilities": [{"vulnerability": "...", "severity": "high|medium|low", "affected_pct": N}],\n'
+                    '  "risk_rating": "strong|adequate|weak|critical",\n'
+                    '  "risk_rating_score": 1-10,\n'
+                    '  "recommendations": [{"action": "...", "priority": "immediate|short_term|medium_term", "expected_impact": "..."}],\n'
+                    '  "chart_data": {\n'
+                    '    "scenario_comparison": [{"scenario": "...", "nav_stressed": N, "nav_baseline": N, "loss_pct": N}],\n'
+                    '    "vulnerability_radar": [{"axis": "...", "value": N}]\n'
+                    "  }\n"
+                    "}\n\n"
+                    "Use professional language with specific basis points, percentages, and dollar figures."
                 ),
             },
             {

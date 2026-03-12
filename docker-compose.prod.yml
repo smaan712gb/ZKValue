@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # PostgreSQL Database
   postgres:
@@ -7,14 +5,10 @@ services:
     container_name: zkvalue-postgres
     env_file:
       - ./backend/.env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-zkvalue}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-zkvalue}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zkvalue}"]
+      test: ["CMD-SHELL", "pg_isready -U zkvalue"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -116,7 +110,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: celery -A app.workers.celery_app beat --loglevel=info
+    command: celery -A app.workers.celery_app beat --loglevel=info --schedule=/app/data/celerybeat-schedule
     restart: unless-stopped
     networks:
       - zkvalue-internal

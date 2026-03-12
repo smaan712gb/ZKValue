@@ -60,17 +60,17 @@ function StatusBadge({ status }: { status: Anchor["status"] }) {
   const config = {
     confirmed: {
       label: "Confirmed",
-      cls: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      cls: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800",
       icon: CheckCircle2,
     },
     pending: {
       label: "Pending",
-      cls: "bg-amber-50 text-amber-700 border-amber-200",
+      cls: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
       icon: Clock,
     },
     failed: {
       label: "Failed",
-      cls: "bg-red-50 text-red-700 border-red-200",
+      cls: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
       icon: XCircle,
     },
   }[status] ?? {
@@ -119,7 +119,7 @@ function StatsBar({
       {stats.map((s) => (
         <div
           key={s.label}
-          className="flex items-center gap-4 rounded-xl border bg-white p-5"
+          className="flex items-center gap-4 rounded-xl border bg-card p-5"
         >
           <div
             className={`flex h-11 w-11 items-center justify-center rounded-lg ${s.color}`}
@@ -249,7 +249,7 @@ export default function BlockchainPage() {
         <StatsBar totalAnchors={total} totalProofs={currentTotalProofs} />
 
         {/* Anchors Table */}
-        <div className="overflow-hidden rounded-xl border bg-white">
+        <div className="overflow-hidden rounded-xl border bg-card">
           <div className="flex items-center gap-2 border-b px-6 py-4">
             <Layers className="h-5 w-5 text-primary" />
             <h2 className="font-semibold text-foreground">Anchors</h2>
@@ -376,7 +376,7 @@ export default function BlockchainPage() {
         </div>
 
         {/* Proof Verification */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-card p-6">
           <div className="mb-5 flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
               <ShieldCheck className="h-5 w-5 text-primary" />
@@ -400,7 +400,7 @@ export default function BlockchainPage() {
                 onChange={(e) => setProofHash(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleVerify()}
                 placeholder="Enter proof hash (e.g. 0xabc…)"
-                className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-lg border bg-card py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <button

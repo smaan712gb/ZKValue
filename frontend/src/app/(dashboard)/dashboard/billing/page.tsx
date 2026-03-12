@@ -154,7 +154,7 @@ export default function BillingPage() {
 
       <div className="p-6">
         {/* Current Plan */}
-        <div className="mb-8 rounded-xl border bg-white p-6">
+        <div className="mb-8 rounded-xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function BillingPage() {
               <div
                 key={plan.name}
                 className={`rounded-xl border p-6 ${
-                  isCurrent ? "border-primary bg-primary/5 shadow-sm" : "bg-white"
+                  isCurrent ? "border-primary bg-primary/5 shadow-sm" : "bg-card"
                 }`}
               >
                 {isCurrent && (
@@ -240,7 +240,7 @@ export default function BillingPage() {
         </div>
 
         {/* Payment Method */}
-        <div className="mb-8 rounded-xl border bg-white p-6">
+        <div className="mb-8 rounded-xl border bg-card p-6">
           <h2 className="mb-4 font-semibold">Payment Method</h2>
           {paymentMethod ? (
             <div className="flex items-center justify-between rounded-lg border p-4">
@@ -279,7 +279,7 @@ export default function BillingPage() {
         </div>
 
         {/* Invoices */}
-        <div className="rounded-xl border bg-white">
+        <div className="rounded-xl border bg-card">
           <div className="border-b px-6 py-4">
             <h2 className="font-semibold">Invoice History</h2>
           </div>
@@ -293,7 +293,7 @@ export default function BillingPage() {
                 <div key={inv.id} className="flex items-center justify-between px-6 py-4">
                   <div className="flex items-center gap-4">
                     <div className="text-sm font-medium">{new Date(inv.date).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</div>
-                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium capitalize text-emerald-700">{inv.status}</span>
+                    <span className="rounded-full bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 text-xs font-medium capitalize text-emerald-700 dark:text-emerald-400">{inv.status}</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-medium">${inv.amount.toLocaleString()}.00</span>

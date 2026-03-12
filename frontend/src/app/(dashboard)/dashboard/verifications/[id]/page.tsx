@@ -134,7 +134,7 @@ export default function VerificationDetailPage() {
       case "completed":
         return {
           icon: CheckCircle2,
-          borderClass: "border-emerald-200 bg-emerald-50",
+          borderClass: "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950",
           iconBg: "bg-emerald-100",
           iconColor: "text-emerald-600",
           titleColor: "text-emerald-900",
@@ -146,7 +146,7 @@ export default function VerificationDetailPage() {
       case "running":
         return {
           icon: Loader2,
-          borderClass: "border-blue-200 bg-blue-50",
+          borderClass: "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950",
           iconBg: "bg-blue-100",
           iconColor: "text-blue-600 animate-spin",
           titleColor: "text-blue-900",
@@ -158,7 +158,7 @@ export default function VerificationDetailPage() {
       case "failed":
         return {
           icon: XCircle,
-          borderClass: "border-red-200 bg-red-50",
+          borderClass: "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950",
           iconBg: "bg-red-100",
           iconColor: "text-red-600",
           titleColor: "text-red-900",
@@ -170,7 +170,7 @@ export default function VerificationDetailPage() {
       default:
         return {
           icon: AlertCircle,
-          borderClass: "border-amber-200 bg-amber-50",
+          borderClass: "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950",
           iconBg: "bg-amber-100",
           iconColor: "text-amber-600",
           titleColor: "text-amber-900",
@@ -301,7 +301,7 @@ export default function VerificationDetailPage() {
               onClick={() => setActiveTab(tab)}
               className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === tab
-                  ? "bg-white text-foreground shadow-sm"
+                  ? "bg-card text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -313,7 +313,7 @@ export default function VerificationDetailPage() {
         {activeTab === "overview" && (
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Basic Info */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <h3 className="mb-4 font-semibold text-foreground">Verification Info</h3>
               <dl className="space-y-3">
                 {[
@@ -338,7 +338,7 @@ export default function VerificationDetailPage() {
 
             {/* Key Metrics */}
             {v.result_data && (
-              <div className="rounded-xl border bg-white p-6">
+              <div className="rounded-xl border bg-card p-6">
                 <h3 className="mb-4 font-semibold text-foreground">Key Metrics</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
@@ -372,7 +372,7 @@ export default function VerificationDetailPage() {
 
             {/* Covenant Compliance */}
             {v.result_data?.covenant_compliance && Object.keys(v.result_data.covenant_compliance).length > 0 && (
-              <div className="rounded-xl border bg-white p-6 lg:col-span-2">
+              <div className="rounded-xl border bg-card p-6 lg:col-span-2">
                 <h3 className="mb-4 font-semibold text-foreground">Covenant Compliance</h3>
                 <div className="grid gap-4 md:grid-cols-3">
                   {Object.entries(v.result_data.covenant_compliance).map(([key, covenant]) => (
@@ -380,8 +380,8 @@ export default function VerificationDetailPage() {
                       key={key}
                       className={`rounded-lg border p-4 ${
                         covenant.compliant
-                          ? "border-emerald-200 bg-emerald-50"
-                          : "border-red-200 bg-red-50"
+                          ? "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950"
+                          : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
                       }`}
                     >
                       <div className="mb-2 flex items-center justify-between">
@@ -415,7 +415,7 @@ export default function VerificationDetailPage() {
         {activeTab === "proof" && (
           <div className="space-y-6">
             {/* Proof Hash */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lock className="h-5 w-5 text-primary" />
@@ -463,7 +463,7 @@ export default function VerificationDetailPage() {
             </div>
 
             {/* Verification Steps */}
-            <div className="rounded-xl border bg-white p-6">
+            <div className="rounded-xl border bg-card p-6">
               <h3 className="mb-4 font-semibold text-foreground">Verification Pipeline</h3>
               <div className="space-y-4">
                 {(v.pipeline_steps || []).map((step, i, arr) => (
@@ -515,7 +515,7 @@ export default function VerificationDetailPage() {
         )}
 
         {activeTab === "report" && (
-          <div className="rounded-xl border bg-white p-6">
+          <div className="rounded-xl border bg-card p-6">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <FileText className="h-5 w-5 text-primary" />
@@ -594,7 +594,7 @@ export default function VerificationDetailPage() {
                 {v.proof_certificate && (
                   <div>
                     <h4 className="mb-2 font-semibold">Proof Certificate</h4>
-                    <div className="rounded-lg bg-white p-4 font-mono text-xs">
+                    <div className="rounded-lg bg-card p-4 font-mono text-xs">
                       <p>Algorithm: {v.proof_certificate.algorithm}</p>
                       <p>Proof Hash: {v.proof_hash}</p>
                       <p>On-Chain: {v.proof_certificate.block_attestation}</p>

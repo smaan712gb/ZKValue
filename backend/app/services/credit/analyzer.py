@@ -24,7 +24,7 @@ class CreditAnalyzerService:
         loans = self.parse_loan_tape(input_data.get("loans", []))
         portfolio_name = input_data.get("portfolio_name", "Unnamed Portfolio")
         fund_name = input_data.get("fund_name", "Unknown Fund")
-        covenants = input_data.get("covenants", self._default_covenants())
+        covenants = input_data.get("covenants") or self._default_covenants()
 
         # Step 2: Calculate interest accrual
         interest_data = self.calculate_interest_accrual(loans)

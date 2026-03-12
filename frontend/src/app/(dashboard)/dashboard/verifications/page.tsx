@@ -26,10 +26,10 @@ import {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    processing: "bg-blue-50 text-blue-700 border-blue-200",
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
-    failed: "bg-red-50 text-red-700 border-red-200",
+    completed: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800",
+    processing: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
+    pending: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
+    failed: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
   };
   const icons: Record<string, typeof CheckCircle2> = {
     completed: CheckCircle2,
@@ -128,7 +128,7 @@ export default function VerificationsPage() {
               placeholder="Search verifications..."
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border bg-card py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function VerificationsPage() {
             <select
               value={moduleFilter}
               onChange={(e) => { setModuleFilter(e.target.value); setCurrentPage(1); }}
-              className="rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+              className="rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="all">All Modules</option>
               <option value="private_credit">Private Credit</option>
@@ -145,7 +145,7 @@ export default function VerificationsPage() {
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-              className="rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+              className="rounded-lg border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="all">All Statuses</option>
               <option value="completed">Completed</option>
@@ -158,7 +158,7 @@ export default function VerificationsPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="mt-3 text-sm text-muted-foreground">Loading verifications...</p>
           </div>
@@ -166,7 +166,7 @@ export default function VerificationsPage() {
 
         {/* Error State */}
         {!loading && error && (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
             <AlertCircle className="h-8 w-8 text-red-500" />
             <p className="mt-3 text-sm font-medium text-foreground">Failed to load verifications</p>
             <p className="mt-1 text-xs text-muted-foreground">{error}</p>
@@ -181,7 +181,7 @@ export default function VerificationsPage() {
 
         {/* Empty State */}
         {!loading && !error && filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center rounded-xl border bg-white py-20">
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-card py-20">
             <FileCheck className="h-8 w-8 text-muted-foreground" />
             <p className="mt-3 text-sm font-medium text-foreground">No verifications found</p>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -203,7 +203,7 @@ export default function VerificationsPage() {
 
         {/* Table */}
         {!loading && !error && filtered.length > 0 && (
-          <div className="overflow-hidden rounded-xl border bg-white">
+          <div className="overflow-hidden rounded-xl border bg-card">
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-secondary/50">
@@ -252,7 +252,7 @@ export default function VerificationsPage() {
                       <td className="px-6 py-4 text-sm text-muted-foreground">{formatDate(v.created_at)}</td>
                       <td className="px-6 py-4">
                         {v.proof_hash ? (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 font-mono text-xs text-emerald-700">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 font-mono text-xs text-emerald-700 dark:text-emerald-400">
                             <CheckCircle2 className="h-3 w-3" />
                             {v.proof_hash.slice(0, 10)}...
                           </span>

@@ -225,14 +225,24 @@ class RegulatoryReportGenerator:
             {
                 "role": "system",
                 "content": (
-                    f"You are a regulatory compliance expert writing a {form_type} filing narrative. "
-                    "Generate a compliance narrative in JSON format with:\n"
-                    "1. filing_summary: Executive summary suitable for regulatory submission\n"
-                    "2. risk_disclosure: Comprehensive risk disclosure language\n"
-                    "3. compliance_attestation: Compliance attestation statement\n"
-                    "4. material_changes: List of material changes to report (if any based on data)\n"
-                    "5. regulatory_recommendations: Recommendations for regulatory compliance improvements\n"
-                    "Use precise regulatory language suitable for SEC/FCA/ESMA filings."
+                    f"You are a regulatory compliance expert writing a {form_type} filing narrative.\n\n"
+                    "## Compliance Workflow\n"
+                    "1. Review all fund data against regulatory requirements\n"
+                    "2. Identify material disclosures and threshold breaches\n"
+                    "3. Draft attestation language with appropriate qualifications\n"
+                    "4. Flag areas requiring additional documentation\n\n"
+                    "## Output Schema (strict JSON)\n"
+                    "{\n"
+                    '  "filing_summary": "Executive summary with key figures (AUM, NAV, fund count)",\n'
+                    '  "risk_disclosure": "Comprehensive risk language covering market, credit, liquidity, operational risks",\n'
+                    '  "compliance_attestation": "Formal attestation statement with date and scope",\n'
+                    '  "material_changes": [{"change": "...", "impact": "...", "disclosure_required": true/false}],\n'
+                    '  "regulatory_recommendations": [{"area": "...", "finding": "...", "action": "...", "priority": "high|medium|low"}],\n'
+                    '  "completeness_score": 0.0-1.0,\n'
+                    '  "filing_readiness": "ready|needs_review|incomplete"\n'
+                    "}\n\n"
+                    "Use precise regulatory language suitable for SEC/FCA/ESMA filings. "
+                    "Reference specific regulatory sections (e.g., Form PF Section 3, AIFMD Annex IV Article 24) where applicable."
                 ),
             },
             {

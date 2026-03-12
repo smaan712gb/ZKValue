@@ -209,7 +209,7 @@ export default function SettingsPage() {
           {/* Content */}
           <div className="flex-1">
             {activeTab === "general" && (
-              <div className="rounded-xl border bg-white p-6">
+              <div className="rounded-xl border bg-card p-6">
                 <h2 className="mb-6 text-lg font-semibold">General Settings</h2>
                 <div className="max-w-lg space-y-4">
                   <div>
@@ -254,7 +254,7 @@ export default function SettingsPage() {
             )}
 
             {activeTab === "llm" && (
-              <div className="rounded-xl border bg-white p-6">
+              <div className="rounded-xl border bg-card p-6">
                 <h2 className="mb-2 text-lg font-semibold">LLM Configuration</h2>
                 <p className="mb-6 text-sm text-muted-foreground">
                   Choose which LLM provider and model to use for AI-powered analysis. DeepSeek-V3 is the default.
@@ -304,8 +304,8 @@ export default function SettingsPage() {
                     )}
                   </div>
 
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                    <p className="text-sm text-amber-800">
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 p-4">
+                    <p className="text-sm text-amber-800 dark:text-amber-400">
                       You&apos;ll need to provide your own API key for non-default providers.
                       API keys are encrypted and stored securely.
                     </p>
@@ -324,7 +324,7 @@ export default function SettingsPage() {
             )}
 
             {activeTab === "team" && (
-              <div className="rounded-xl border bg-white p-6">
+              <div className="rounded-xl border bg-card p-6">
                 <div className="mb-6 flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-semibold">Team Members</h2>
@@ -389,7 +389,7 @@ export default function SettingsPage() {
                 {/* Invite Modal */}
                 {showInviteModal && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+                    <div className="w-full max-w-md rounded-xl bg-card p-6 shadow-xl">
                       <h3 className="mb-4 text-lg font-semibold">Invite Team Member</h3>
                       <div className="space-y-4">
                         <div>
@@ -438,17 +438,17 @@ export default function SettingsPage() {
             )}
 
             {activeTab === "api" && (
-              <div className="rounded-xl border bg-white p-6">
+              <div className="rounded-xl border bg-card p-6">
                 <h2 className="mb-2 text-lg font-semibold">API Keys</h2>
                 <p className="mb-6 text-sm text-muted-foreground">
                   Use API keys to integrate ZKValue with your systems
                 </p>
                 <div className="max-w-lg">
-                  <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                  <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950 p-4">
                     <Info className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
                     <div>
-                      <p className="text-sm font-medium text-blue-900">API keys are managed via environment variables</p>
-                      <p className="mt-1 text-sm text-blue-700">
+                      <p className="text-sm font-medium text-blue-900 dark:text-blue-400">API keys are managed via environment variables</p>
+                      <p className="mt-1 text-sm text-blue-700 dark:text-blue-400">
                         For security, API keys are configured through server-side environment variables and are not
                         exposed in the frontend. Contact your system administrator to manage API key configuration.
                       </p>
@@ -460,7 +460,7 @@ export default function SettingsPage() {
 
             {activeTab === "security" && (
               <div className="space-y-6">
-                <div className="rounded-xl border bg-white p-6">
+                <div className="rounded-xl border bg-card p-6">
                   <h2 className="mb-4 text-lg font-semibold">Security Settings</h2>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between rounded-lg border p-4">

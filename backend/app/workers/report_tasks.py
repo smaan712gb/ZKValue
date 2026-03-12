@@ -3,6 +3,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 from app.workers.celery_app import celery_app
+from app.workers.verification_tasks import _make_session_factory
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,6 @@ def _validate_webhook_url(url: str) -> bool:
         hostname = parsed.hostname or ""
         if hostname in BLOCKED_HOSTS:
             return False
-        # Block private IP ranges
         if hostname.startswith(("10.", "192.168.", "172.")):
             return False
         return True
@@ -54,18 +54,21 @@ def cleanup_old_verifications(days: int = 90):
 
     async def _cleanup():
         from sqlalchemy import update
-        from app.core.database import async_session_factory
         from app.models.verification import Verification
 
         cutoff = datetime.now(timezone.utc) - timedelta(days=days)
-        async with async_session_factory() as session:
-            result = await session.execute(
-                update(Verification)
-                .where(Verification.created_at < cutoff, Verification.is_deleted == False)
-                .values(is_deleted=True)
-            )
-            await session.commit()
-            logger.info(f"Soft-deleted {result.rowcount} verifications older than {days} days")
+        session_factory, engine = _make_session_factory()
+        try:
+            async with session_factory() as session:
+                result = await session.execute(
+                    update(Verification)
+                    .where(Verification.created_at < cutoff, Verification.is_deleted == False)
+                    .values(is_deleted=True)
+                )
+                await session.commit()
+                logger.info(f"Soft-deleted {result.rowcount} verifications older than {days} days")
+        finally:
+            await engine.dispose()
 
     asyncio.run(_cleanup())
 
@@ -76,52 +79,52 @@ def generate_usage_report(organization_id: str, month: str):
     logger.info(f"Generating usage report for org {organization_id}, month {month}")
 
     async def _generate():
-        from sqlalchemy import select, func
-        from app.core.database import async_session_factory
+        from sqlalchemy import select, func, extract
         from app.models.verification import Verification, VerificationStatus
         from app.models.organization import Organization
 
         year, month_num = map(int, month.split("-"))
 
-        async with async_session_factory() as session:
-            # Get org info
-            org_result = await session.execute(
-                select(Organization).where(Organization.id == organization_id)
-            )
-            org = org_result.scalar_one_or_none()
-            if not org:
-                logger.error(f"Organization {organization_id} not found")
-                return
-
-            # Count verifications for the month
-            from sqlalchemy import extract
-            total = (await session.execute(
-                select(func.count()).where(
-                    Verification.organization_id == organization_id,
-                    extract("month", Verification.created_at) == month_num,
-                    extract("year", Verification.created_at) == year,
+        session_factory, engine = _make_session_factory()
+        try:
+            async with session_factory() as session:
+                org_result = await session.execute(
+                    select(Organization).where(Organization.id == organization_id)
                 )
-            )).scalar() or 0
+                org = org_result.scalar_one_or_none()
+                if not org:
+                    logger.error(f"Organization {organization_id} not found")
+                    return
 
-            completed = (await session.execute(
-                select(func.count()).where(
-                    Verification.organization_id == organization_id,
-                    Verification.status == VerificationStatus.completed,
-                    extract("month", Verification.created_at) == month_num,
-                    extract("year", Verification.created_at) == year,
-                )
-            )).scalar() or 0
+                total = (await session.execute(
+                    select(func.count()).where(
+                        Verification.organization_id == organization_id,
+                        extract("month", Verification.created_at) == month_num,
+                        extract("year", Verification.created_at) == year,
+                    )
+                )).scalar() or 0
 
-            report = {
-                "organization": org.name,
-                "month": month,
-                "total_verifications": total,
-                "completed_verifications": completed,
-                "plan": org.plan.value,
-                "limit": org.max_verifications_per_month,
-                "usage_pct": round(total / max(org.max_verifications_per_month, 1) * 100, 1),
-            }
-            logger.info(f"Usage report for {org.name}: {report}")
-            return report
+                completed = (await session.execute(
+                    select(func.count()).where(
+                        Verification.organization_id == organization_id,
+                        Verification.status == VerificationStatus.completed,
+                        extract("month", Verification.created_at) == month_num,
+                        extract("year", Verification.created_at) == year,
+                    )
+                )).scalar() or 0
+
+                report = {
+                    "organization": org.name,
+                    "month": month,
+                    "total_verifications": total,
+                    "completed_verifications": completed,
+                    "plan": org.plan.value,
+                    "limit": org.max_verifications_per_month,
+                    "usage_pct": round(total / max(org.max_verifications_per_month, 1) * 100, 1),
+                }
+                logger.info(f"Usage report for {org.name}: {report}")
+                return report
+        finally:
+            await engine.dispose()
 
     return asyncio.run(_generate())

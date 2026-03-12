@@ -100,7 +100,7 @@ function SummaryCard({
   color: string;
 }) {
   return (
-    <div className="rounded-xl border bg-white p-5 flex items-center gap-4">
+    <div className="rounded-xl border bg-card p-5 flex items-center gap-4">
       <div
         className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg ${color}`}
       >
@@ -153,7 +153,7 @@ function ModelUsageTab() {
       {/* Period selector */}
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground">Period:</span>
-        <div className="flex rounded-lg border bg-white p-0.5">
+        <div className="flex rounded-lg border bg-card p-0.5">
           {periods.map((p) => (
             <button
               key={p.value}
@@ -210,7 +210,7 @@ function ModelUsageTab() {
           </div>
 
           {/* Model table */}
-          <div className="overflow-hidden rounded-xl border bg-white">
+          <div className="overflow-hidden rounded-xl border bg-card">
             <div className="border-b px-6 py-4">
               <h3 className="font-semibold text-foreground">
                 Usage by Model
@@ -321,7 +321,7 @@ function LineageTab() {
             onChange={(e) => setVerificationId(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLoad()}
             placeholder="Enter verification ID…"
-            className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border bg-card py-2 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
         <button
@@ -347,7 +347,7 @@ function LineageTab() {
       {lineage && (
         <div className="space-y-6">
           {/* Pipeline Timeline */}
-          <div className="rounded-xl border bg-white p-6">
+          <div className="rounded-xl border bg-card p-6">
             <div className="mb-5 flex items-center gap-2">
               <GitBranch className="h-5 w-5 text-primary" />
               <h3 className="font-semibold text-foreground">
@@ -421,7 +421,7 @@ function LineageTab() {
           </div>
 
           {/* LLM Calls Table */}
-          <div className="overflow-hidden rounded-xl border bg-white">
+          <div className="overflow-hidden rounded-xl border bg-card">
             <div className="border-b px-6 py-4 flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
               <h3 className="font-semibold text-foreground">LLM Calls</h3>
@@ -482,12 +482,12 @@ function LineageTab() {
                         </td>
                         <td className="px-4 py-3">
                           {c.success ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                               <CheckCircle2 className="h-3 w-3" />
                               Success
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-700">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:text-red-400">
                               <XCircle className="h-3 w-3" />
                               Failed
                             </span>
@@ -502,7 +502,7 @@ function LineageTab() {
           </div>
 
           {/* Summary */}
-          <div className="rounded-xl border bg-white p-6">
+          <div className="rounded-xl border bg-card p-6">
             <h3 className="mb-4 font-semibold text-foreground">Summary</h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-lg bg-secondary/40 p-4 text-center">
@@ -566,7 +566,7 @@ export default function ModelRegistryPage() {
 
       <div className="p-6 space-y-6">
         {/* Tabs */}
-        <div className="flex gap-1 rounded-xl border bg-white p-1 w-fit">
+        <div className="flex gap-1 rounded-xl border bg-card p-1 w-fit">
           {tabs.map((tab) => (
             <button
               key={tab.id}

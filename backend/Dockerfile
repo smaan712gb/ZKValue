@@ -16,8 +16,8 @@ RUN groupadd -r zkvalue && useradd -r -g zkvalue -d /app -s /sbin/nologin zkvalu
 
 COPY . .
 
-# Create storage directory
-RUN mkdir -p /app/storage && chown -R zkvalue:zkvalue /app/storage
+# Create writable directories for non-root user
+RUN mkdir -p /app/storage /app/data && chown -R zkvalue:zkvalue /app/storage /app/data /app
 
 USER zkvalue
 
