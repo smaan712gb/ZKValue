@@ -160,10 +160,14 @@ class AnalyticsEngine:
             )
             .group_by(Verification.module)
         )
-        return {
-            row.module.value: {
+        default = {"total_completed": 0, "avg_processing_seconds": 0.0}
+        stats = {
+            "private_credit": {**default},
+            "ai_ip_valuation": {**default},
+        }
+        for row in result.all():
+            stats[row.module.value] = {
                 "total_completed": row.total,
                 "avg_processing_seconds": round(float(row.avg_duration_sec or 0), 1),
             }
-            for row in result.all()
-        }
+        return stats
