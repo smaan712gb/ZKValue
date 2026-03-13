@@ -21,16 +21,16 @@ RUN mkdir -p /app/storage /app/data && chown -R zkvalue:zkvalue /app/storage /ap
 
 USER zkvalue
 
-EXPOSE 8000
+EXPOSE ${PORT:-8000}
 
 # Production: gunicorn with uvicorn workers
-# Override CMD in docker-compose.yml for development (uvicorn --reload)
-CMD ["gunicorn", "app.main:app", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "4", \
-     "--worker-class", "uvicorn.workers.UvicornWorker", \
-     "--timeout", "120", \
-     "--graceful-timeout", "30", \
-     "--keep-alive", "5", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-"]
+# Shell form so $PORT is expanded at runtime (Railway sets PORT dynamically)
+CMD gunicorn app.main:app \
+    --bind "0.0.0.0:${PORT:-8000}" \
+    --workers 4 \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --timeout 120 \
+    --graceful-timeout 30 \
+    --keep-alive 5 \
+    --access-logfile - \
+    --error-logfile -
