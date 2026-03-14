@@ -23,10 +23,11 @@ import { toast } from "sonner";
 interface AuditLog {
   id: string;
   timestamp: string;
-  user_name: string;
+  user_name?: string;
+  user_id?: string;
   action: string;
   resource_type: string;
-  details: string;
+  details: unknown;
   ip_address: string;
   resource_id: string;
 }
@@ -194,7 +195,7 @@ export default function AuditPage() {
                           {new Date(log.timestamp).toLocaleString()}
                         </td>
                         <td className="px-6 py-3">
-                          <span className="text-sm font-medium">{log.user_name}</span>
+                          <span className="text-sm font-medium">{log.user_name ?? log.user_id?.slice(0, 8) ?? "System"}</span>
                         </td>
                         <td className="px-6 py-3">
                           <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium capitalize">
@@ -202,7 +203,15 @@ export default function AuditPage() {
                             {log.action.replace(/_/g, " ")}
                           </span>
                         </td>
-                        <td className="px-6 py-3 text-sm text-muted-foreground">{log.details}</td>
+                        <td className="px-6 py-3 text-sm text-muted-foreground">
+                          {typeof log.details === "string"
+                            ? log.details
+                            : log.details && typeof log.details === "object"
+                              ? Object.entries(log.details as Record<string, unknown>)
+                                  .map(([k, v]) => `${k}: ${v}`)
+                                  .join(", ")
+                              : "—"}
+                        </td>
                         <td className="px-6 py-3 font-mono text-xs text-muted-foreground">{log.ip_address}</td>
                       </tr>
                     );
