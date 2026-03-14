@@ -189,7 +189,7 @@ export default function NLQueryPage() {
     setResult(null);
 
     try {
-      const res = await api.post<QueryResult>("/nl-query/query", {
+      const res = await api.post<QueryResult>("/nl-query", {
         question: q,
       });
       const data = res.data;

@@ -57,7 +57,7 @@ export function Header({ title, description, actions }: HeaderProps) {
 
   const handleMarkAllRead = async () => {
     try {
-      await api.post("/notifications/mark-all-read");
+      await api.post("/notifications/read-all");
       setUnreadCount(0);
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       toast.success("All notifications marked as read");

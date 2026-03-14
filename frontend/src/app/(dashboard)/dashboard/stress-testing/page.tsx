@@ -104,20 +104,23 @@ function PresetsTab({ verificationId }: { verificationId: string }) {
         `/stress-testing/run/${verificationId}?scenario_key=all`
       );
       const data = res.data;
-      // Accept array or keyed object
-      if (Array.isArray(data)) {
-        setResults(data);
-      } else if (data.results && Array.isArray(data.results)) {
-        setResults(data.results);
-      } else {
-        // Transform object of scenario_key → result
-        setResults(
-          Object.entries(data).map(([key, val]) => ({
+      // Backend returns { scenarios: { key: { scenario_name, results: {...} } }, ... }
+      const scenarios = data.scenarios ?? data;
+      const parsed: ScenarioResult[] = Object.entries(scenarios)
+        .filter(([key]) => !["verification_id", "scenario_count", "loan_count"].includes(key))
+        .map(([key, val]) => {
+          const v = val as Record<string, unknown>;
+          const r = (v.results ?? v) as Record<string, unknown>;
+          return {
             scenario_key: key,
-            ...(val as Omit<ScenarioResult, "scenario_key">),
-          }))
-        );
-      }
+            scenario_name: (v.scenario_name as string) ?? key,
+            loss_rate: (r.loss_rate as number) ?? 0,
+            stressed_nav: (r.stressed_nav as number) ?? 0,
+            loans_underwater: (r.loans_underwater as number) ?? 0,
+            avg_default_probability: (r.avg_default_probability as number) ?? 0,
+          };
+        });
+      setResults(parsed);
       toast.success("Stress scenarios completed.");
     } catch (err: unknown) {
       const msg =
@@ -235,9 +238,17 @@ function CustomTab({ verificationId }: { verificationId: string }) {
       const res = await api.post(`/stress-testing/custom/${verificationId}`, {
         rate_shock_bps: rateShock,
         default_multiplier: defaultMultiplier,
-        collateral_haircut_pct: collateralHaircut / 100,
+        collateral_haircut: collateralHaircut / 100,
       });
-      setResult(res.data);
+      // Backend returns { verification_id, result: { results: { loss_rate, ... } } }
+      const raw = res.data.result ?? res.data;
+      const r = raw.results ?? raw;
+      setResult({
+        loss_rate: r.loss_rate ?? 0,
+        stressed_nav: r.stressed_nav ?? 0,
+        loans_underwater: r.loans_underwater ?? 0,
+        avg_default_probability: r.avg_default_probability ?? 0,
+      });
       toast.success("Custom scenario completed.");
     } catch (err: unknown) {
       const msg =
@@ -430,9 +441,20 @@ function MonteCarloTab({ verificationId }: { verificationId: string }) {
     try {
       const res = await api.post(
         `/stress-testing/monte-carlo/${verificationId}`,
-        { simulations }
+        { num_simulations: simulations }
       );
-      setResult(res.data);
+      // Backend returns nested structure: { risk_metrics: { var_95, ... }, nav_distribution: { ... } }
+      const data = res.data;
+      const risk = data.risk_metrics ?? {};
+      const nav = data.nav_distribution ?? {};
+      setResult({
+        var_95: (risk.var_95 ?? 0) / (data.total_outstanding || 1),
+        var_99: (risk.var_99 ?? 0) / (data.total_outstanding || 1),
+        expected_loss_rate: (risk.expected_loss_rate ?? 0) / 100,
+        nav_p5: nav.percentile_5 ?? nav.worst_case ?? 0,
+        nav_median: nav.median ?? nav.mean ?? 0,
+        nav_p95: nav.percentile_95 ?? nav.best_case ?? 0,
+      });
       toast.success("Monte Carlo simulation completed.");
     } catch (err: unknown) {
       const msg =
