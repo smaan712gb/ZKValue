@@ -124,10 +124,28 @@ function ModelUsageTab() {
   const fetchStats = useCallback(async (days: number) => {
     setLoading(true);
     try {
-      const res = await api.get<UsageStats>("/model-registry/stats", {
+      const res = await api.get("/model-registry/stats", {
         params: { days },
       });
-      setStats(res.data);
+      const data = res.data;
+      const byModel = (data.by_model ?? []).map((m: Record<string, unknown>) => ({
+        model_name: m.model_name as string,
+        provider: m.provider as string,
+        calls: (m.call_count ?? m.calls ?? 0) as number,
+        tokens: (m.total_tokens ?? m.tokens ?? 0) as number,
+        cost_usd: (m.total_cost_usd ?? m.cost_usd ?? 0) as number,
+        avg_latency_ms: (m.avg_latency_ms ?? 0) as number,
+      }));
+      const avgLat = byModel.length > 0
+        ? byModel.reduce((s: number, m: ModelUsage) => s + m.avg_latency_ms, 0) / byModel.length
+        : 0;
+      setStats({
+        total_calls: data.total_calls ?? 0,
+        total_tokens: data.total_tokens ?? 0,
+        total_cost_usd: data.total_cost_usd ?? 0,
+        avg_latency_ms: data.avg_latency_ms ?? avgLat,
+        by_model: byModel,
+      });
     } catch (err: unknown) {
       const detail =
         (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
@@ -296,10 +314,43 @@ function LineageTab() {
     setLoading(true);
     setLineage(null);
     try {
-      const res = await api.get<LineageData>(
+      const res = await api.get(
         `/model-registry/lineage/${encodeURIComponent(id)}`
       );
-      setLineage(res.data);
+      const data = res.data;
+      // Map backend field names to frontend interface
+      const events: LineageEvent[] = (data.lineage_events ?? data.events ?? []).map(
+        (e: Record<string, unknown>) => ({
+          step: (e.step_order ?? e.step ?? 0) as number,
+          event_type: e.event_type as string,
+          transformation: e.transformation as string,
+          input_hash: e.input_hash as string,
+          output_hash: e.output_hash as string,
+          duration_ms: (e.duration_ms ?? 0) as number,
+        })
+      );
+      const llmCalls: LlmCall[] = (data.model_usage ?? data.llm_calls ?? []).map(
+        (c: Record<string, unknown>) => ({
+          provider: c.provider as string,
+          model: (c.model_name ?? c.model ?? "") as string,
+          operation: (c.operation ?? "") as string,
+          tokens: (c.total_tokens ?? c.tokens ?? 0) as number,
+          cost_usd: (c.cost_usd ?? 0) as number,
+          latency_ms: (c.latency_ms ?? 0) as number,
+          success: c.success === true || c.success === "true",
+        })
+      );
+      setLineage({
+        verification_id: data.verification_id ?? id,
+        events,
+        llm_calls: llmCalls,
+        summary: data.summary ?? {
+          total_events: data.total_events ?? events.length,
+          total_llm_calls: data.total_llm_calls ?? llmCalls.length,
+          total_tokens: data.total_tokens ?? llmCalls.reduce((s: number, c: LlmCall) => s + c.tokens, 0),
+          total_cost_usd: data.total_cost_usd ?? llmCalls.reduce((s: number, c: LlmCall) => s + c.cost_usd, 0),
+        },
+      });
     } catch (err: unknown) {
       const detail =
         (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;

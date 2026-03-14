@@ -154,6 +154,31 @@ export default function BlockchainPage() {
   const [proofHash, setProofHash] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [verifyResult, setVerifyResult] = useState<VerifyResult | null>(null);
+  const [recentProofs, setRecentProofs] = useState<{ id: string; name: string; proof_hash: string }[]>([]);
+
+  // Fetch recent proof hashes from completed verifications
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await api.get("/verifications", {
+          params: { status: "completed", page_size: 20 },
+        });
+        const items = res.data?.items ?? res.data ?? [];
+        const proofs = items
+          .filter((v: Record<string, unknown>) => v.proof_hash)
+          .map((v: Record<string, unknown>) => ({
+            id: v.id as string,
+            name: ((v.metadata as Record<string, string>)?.portfolio_name ??
+              (v.metadata as Record<string, string>)?.asset_name ??
+              (v.id as string).slice(0, 8)) as string,
+            proof_hash: v.proof_hash as string,
+          }));
+        setRecentProofs(proofs);
+      } catch {
+        // Non-critical
+      }
+    })();
+  }, []);
 
   const fetchAnchors = useCallback(async (page: number) => {
     setLoadingAnchors(true);
@@ -390,6 +415,27 @@ export default function BlockchainPage() {
               </p>
             </div>
           </div>
+
+          {recentProofs.length > 0 && (
+            <div className="mb-3">
+              <p className="mb-2 text-xs font-medium text-muted-foreground">Quick select a proof from your verifications:</p>
+              <div className="flex flex-wrap gap-2">
+                {recentProofs.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setProofHash(p.proof_hash)}
+                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                      proofHash === p.proof_hash
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-secondary/50 text-foreground hover:border-primary hover:text-primary"
+                    }`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-3">
             <div className="relative flex-1">
