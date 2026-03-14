@@ -139,8 +139,24 @@ function ReportCard({
   const handleGenerateReport = useCallback(async () => {
     setGeneratingReport(true);
     try {
-      const res = await api.get<Report>(endpoint);
-      setReport(res.data);
+      const res = await api.get(endpoint);
+      const data = res.data;
+      // Backend returns sections as object { section_key: { title, ...fields } }
+      // Transform to array of { title, data }
+      const rawSections = data.sections ?? {};
+      const sectionsArray: ReportSection[] = Object.entries(rawSections).map(
+        ([, val]) => {
+          const section = val as Record<string, unknown>;
+          const sectionTitle = (section.title as string) ?? "Section";
+          const { title: _t, ...rest } = section;
+          return { title: sectionTitle, data: rest };
+        }
+      );
+      setReport({
+        report_type: data.form_type ?? data.report_type ?? reportType,
+        generated_at: data.generated_at ?? new Date().toISOString(),
+        sections: sectionsArray,
+      });
       setNarrative(null);
       toast.success(`${title} generated successfully`);
     } catch (err: unknown) {
@@ -155,10 +171,19 @@ function ReportCard({
   const handleGenerateNarrative = useCallback(async () => {
     setGeneratingNarrative(true);
     try {
-      const res = await api.post<Narrative>(
+      const res = await api.post(
         `/regulatory/narrative/${reportType}`
       );
-      setNarrative(res.data);
+      // Backend returns { narrative: { filing_summary, ... }, report_type, report_data }
+      const narr = res.data.narrative ?? res.data;
+      setNarrative({
+        filing_summary: narr.filing_summary ?? "",
+        risk_disclosure: narr.risk_disclosure ?? "",
+        compliance_attestation: narr.compliance_attestation ?? "",
+        recommendations: Array.isArray(narr.regulatory_recommendations)
+          ? narr.regulatory_recommendations.map((r: Record<string, string>) => `[${r.priority}] ${r.area}: ${r.action}`).join("\n")
+          : (narr.recommendations ?? ""),
+      });
       toast.success("Narrative generated successfully");
     } catch (err: unknown) {
       const detail =
