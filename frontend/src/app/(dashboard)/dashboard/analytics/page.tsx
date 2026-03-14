@@ -245,15 +245,19 @@ function AIAssetPerformanceCard({
 }: {
   data: AIAssetPerformance;
 }) {
+  // Backend returns rates already as percentages (e.g. 66.7 for 66.7%), normalize to 0-1
+  const ias38 = data.ias38_compliance_rate > 1 ? data.ias38_compliance_rate / 100 : data.ias38_compliance_rate;
+  const asc350 = data.asc350_compliance_rate > 1 ? data.asc350_compliance_rate / 100 : data.asc350_compliance_rate;
+
   const complianceItems = [
     {
       label: "IAS 38 Compliance",
-      rate: data.ias38_compliance_rate,
+      rate: ias38,
       color: "bg-emerald-500",
     },
     {
       label: "ASC 350 Compliance",
-      rate: data.asc350_compliance_rate,
+      rate: asc350,
       color: "bg-blue-500",
     },
   ];
