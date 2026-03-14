@@ -70,7 +70,7 @@ def fake_contract_address() -> str:
 def compute_portfolio_metrics(loans):
     total_principal = sum(l["principal"] for l in loans)
     total_balance = sum(l["outstanding_balance"] for l in loans)
-    weighted_rate = sum(l["principal"] * l["interest_rate"] for l in loans) / total_principal
+    weighted_rate = sum(l["principal"] * l["interest_rate"] for l in loans) / total_principal / 100
     avg_ltv = sum(l.get("ltv_ratio", 0.7) for l in loans) / len(loans)
     return total_principal, total_balance, weighted_rate, avg_ltv
 

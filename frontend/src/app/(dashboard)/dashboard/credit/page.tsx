@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/layout/header";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import {
   Landmark,
@@ -19,6 +20,7 @@ import { toast } from "sonner";
 import type { CreditPortfolio } from "@/types";
 
 export default function CreditPage() {
+  const router = useRouter();
   const [portfolios, setPortfolios] = useState<CreditPortfolio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -211,7 +213,10 @@ export default function CreditPage() {
                         )}
                       </div>
 
-                      <button className="flex w-full items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
+                      <button
+                        onClick={() => router.push(`/dashboard/verifications/${p.verification_id}`)}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+                      >
                         View Details
                         <ArrowRight className="h-4 w-4" />
                       </button>
